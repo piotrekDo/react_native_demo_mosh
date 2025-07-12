@@ -6,8 +6,10 @@ npx create-expo-app DoneWithItMosh --template
 
 ## nowy komponent
 majac zainstalowane rozszerzenie ES7+ React/Redux/React-Native snippets
-nowy komponent mozna stworzyc poprzez 'rsf' jako skrot od React Stateless Function i mamy gotowa, pusta templatke.
+nowy komponent mozna stworzyc poprzez '`rsf`' jako skrot od React Stateless Function i mamy gotowa, pusta templatke.
 Jak rafc w zwyklym React.
+
+DLA TS wpisujemy `tsrfc`
 
 
 W Native to App jest miejscem startowym, podobnie jak main w zwyklym React
@@ -18,6 +20,10 @@ export default function App() {
   return <WelcomeScreen />;
 }
 
+
+## IKONY
+
+https://icons.expo.fyi/Index
 
 
 ## komponenty, brak HTML
@@ -65,3 +71,50 @@ dziala nieco inaczej niz w css. Wlasnosc Flex: 1 zajmuje 100 % powierzchni rodzi
     </View>
 
 W przypadku wrap, zawartosc View jako calosc ustawia sie poprzez Align content, nie align items. Align items dziala na ustawienie przedmiotow w swojej linii. 
+
+
+## Platform specific styles / Platform.select
+
+Poprzez orzekazanie obiektu Platform.select można definiować różne zestawy styli dla różnych platform. 
+Poniżej przykład, gdzie kolor tekstu jest zawsze taki sam, ale w zależności od platformy zmienia się jego rozmiar i czcionka. 
+
+Jest to alternatywa dla powtarzalnego sprawdzania platformy jak w przykladzie
+`fontFamily: Platform.OS === 'android' ? 'Roboto' : 'Avenir'`
+
+```
+import React from 'react';
+import { Platform, StyleSheet, Text } from 'react-native';
+
+function AppText({ children }) {
+  return <Text style={styles.text}>{children}</Text>;
+}
+
+Platform.select({
+  ios: {
+    fontSize: 20,
+    fontFamily: 'Avenir',
+  },
+  android: {
+    fontSize: 18,
+    fontFamily: 'Roboto',
+  },
+});
+
+const styles = StyleSheet.create({
+  text: {
+    color: 'tomato',
+    ...Platform.select({
+      ios: {
+        fontSize: 20,
+        fontFamily: 'Avenir',
+      },
+      android: {
+        fontSize: 18,
+        fontFamily: 'Roboto',
+      },
+    }),
+  },
+});
+
+export default AppText;
+```
