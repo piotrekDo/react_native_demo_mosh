@@ -1,8 +1,10 @@
-## instalacja
+# https://docs.expo.dev/index.html
+
+## nowy projekt
 
 poprzednie CLI jest przestarzałe, dopisek --template pozwala wybrac opcje w postaci TS. Domyslnie tworzy sie blank bez TS
 
-npx create-expo-app DoneWithItMosh --template
+`npx create-expo-app NAZWA_PROJEKTU --template` 
 
 ## nowy komponent
 majac zainstalowane rozszerzenie ES7+ React/Redux/React-Native snippets
@@ -22,8 +24,27 @@ export default function App() {
 
 
 ## IKONY
+ikony nie wymagaja instalacji, sa czescia ekspo. Przy imporcie ikon trzeba pamietac o sposobie zapisu
+poprzez MaterialIcons. 
 
 https://icons.expo.fyi/Index
+
+
+```
+import { MaterialIcons } from '@expo/vector-icons';
+
+...
+
+function ViewImageScreen(props) {
+  return (
+    <View style={styles.container}>
+      <MaterialIcons style={styles.closeIcon} name='close' size={40} color='white' />
+      <MaterialIcons style={styles.deleteIcon} name='delete' size={40} color='white' />
+      <Image resizeMode='contain' style={styles.image} source={require('../assets/app-foto/chair.jpg')} />
+    </View>
+  );
+}
+```
 
 
 ## komponenty, brak HTML
@@ -41,6 +62,34 @@ SafeAreaView – zapewnia, że zawartość nie nachodzi na elementy systemowe (n
 Dlaczego nie ma standardowych elementów HTML?
 React Native nie używa HTML ani DOM. Zamiast tego korzysta z własnych komponentów, które są tłumaczone na natywne widoki Androida/iOS. Dzięki temu aplikacje wyglądają i działają jak natywne, a nie jak strony internetowe.
 
+## expo constants
+`npm i expo-constants` udostepnia obiekt Constants z danymi dotyczacymi urządzenia. 
+`import  Constants from 'expo-constants';` **BEZ NAWIASÓW wokol Constants!**
+
+dobrym zastosowaniem jest `paddingTop: Constants.statusBarHeight,` pozwalające nadać górny padding w zależności od urządzenia
+
+```
+export const MessagesScreen = () => {
+  return (
+    <SafeAreaView style={styles.screen}>
+      <FlatList
+        data={messages}
+        keyExtractor={msg => msg.id.toString()}
+        renderItem={({ item, index, separators }) => (
+          <ListItem title={item.title} subTitle={item.description} image={item.image} />
+        )}
+        ItemSeparatorComponent={props => <View style={{ width: '100%', height: 1, backgroundColor: 'orange' }} />}
+      />
+    </SafeAreaView>
+  );
+};
+```
+
+const styles = StyleSheet.create({
+  screen: {
+    paddingTop: Constants.statusBarHeight,
+  },
+});
 
 ## Flecbox
 dziala nieco inaczej niz w css. Wlasnosc Flex: 1 zajmuje 100 % powierzchni rodzica. w Przykladzie ponizej 3x View zagnieżdżone w innym View podzielą ekran na 3 części, jako że chca zajac caly ekran. Dodatkowo pierwszy posiada wlasnosc flex ustawiona na 2, co oznacza ze lacznie te 3 View dziela ekran na 4 czesci z czego pierwszy View zajmuje 2 z nich.
@@ -117,4 +166,57 @@ const styles = StyleSheet.create({
 });
 
 export default AppText;
+```
+
+## Gesty, swipe
+WAZNE- wykonac obydwa installe, reanimated nie zadziala samo w sobie, a gesture-handler go nie zawiera!!
+
+`npx expo install react-native-gesture-handler`
+`npx expo install react-native-reanimated`
+WAZNE - instalacja poprzez expo, nie standardowo poprzez npm, s ktorego expo korzysta. Instalacja poprzez expo zapewnia spojnosc wersji z expo wykorzystanym w projekcie
+
+Dodatkowo, trzeba owrapowac aplikacje wewnatrz `GestureHandlerRootView` ktore samo w sobie moze dzialac jak kontener
+```
+    <GestureHandlerRootView>
+      <View style={{ padding: 20, width: '100%', flex: 1, backgroundColor: '#f8f4f4' }}>
+        <MessagesScreen />
+      </View>
+    </GestureHandlerRootView>
+```
+
+https://docs.swmansion.com/react-native-gesture-handler/docs/components/reanimated_swipeable
+
+przy swipe wazne aby pamietac o nowym imporcie
+`import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';`
+
+## Touchables
+
+`TouchableHighlight` do dzialania wymaga propsa onPress, dodatkowo poprzez underlayColor mozna okreslic kolor podswietlania
+
+    <TouchableHighlight underlayColor={colors.light} onPress={() => console.log()}>
+
+
+## Listy
+
+Do renderowania list w native wykorzystuje sie `FlatList`. Trzeba w nim zapewnić
+- `data` tablica z danymi,
+- `renderItem` musi zwrócić komponent, np. ListItem, Text itp.
+- `keyExtractor` zapewnia unikalny key dla Reacta
+
+`ItemSeparatorComponent` pozwala zdefiniować komponent wykorzystywany jako separator między elementami. 
+Jego zaletą jest to, że nie renderuje się za ostatnim elementem. 
+
+```
+export const MessagesScreen = () => {
+  return (
+    <SafeAreaView style={styles.screen}>
+      <FlatList
+        data={messages}
+        keyExtractor={msg => msg.id.toString()}
+        renderItem={({ item, index, separators }) => (
+          <ListItem title={item.title} subTitle={item.description} image={item.image} />
+        )}
+        ItemSeparatorComponent={props => <View style={{ width: '100%', height: 1, backgroundColor: 'orange' }} />}
+      />
+    </SafeAreaView>
 ```

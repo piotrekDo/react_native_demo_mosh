@@ -11,7 +11,7 @@ export const ListingDetailsScreen = () => {
         <Text style={styles.title}>Red jacket for sale!</Text>
         <Text style={styles.subTitle}>$100</Text>
       </View>
-      <ListItem image={require('../assets/app-foto/mosh.jpg')} title='Mosh Hamedani' subTitle='5 Listings'/>
+      <ListItem image={require('../assets/app-foto/mosh.jpg')} title='Mosh Hamedani' subTitle='5 Listings' onPress={() => {}}/>
     </View>
   );
 };

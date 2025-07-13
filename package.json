@@ -10,13 +10,16 @@
   },
   "dependencies": {
     "expo": "~53.0.17",
+    "expo-constants": "^17.1.7",
+    "expo-haptics": "~14.1.4",
+    "expo-linear-gradient": "~14.1.5",
     "expo-status-bar": "~2.2.3",
     "expo-updates": "~0.28.16",
     "react": "19.0.0",
     "react-native": "0.79.5",
     "react-native-linear-gradient": "^2.8.3",
-    "expo-linear-gradient": "~14.1.5",
-    "expo-haptics": "~14.1.4"
+    "react-native-gesture-handler": "~2.24.0",
+    "react-native-reanimated": "~3.17.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

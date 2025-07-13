@@ -1,22 +1,29 @@
 import React from 'react';
-import { Image, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import { Image, ImageSourcePropType, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import colors from '../config/colors';
+import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 interface Props {
   image: ImageSourcePropType;
   title: string;
   subTitle: string;
+  onPress: () => void;
+  renderRightActions?: (progress: any, dragX: any) => React.ReactNode;
 }
 
-export const ListItem = ({ image, title, subTitle }: Props) => {
+export const ListItem = ({ image, title, subTitle, onPress, renderRightActions }: Props) => {
   return (
-    <View style={styles.container}>
-      <Image style={styles.image} source={image} />
-      <View style={styles.containerText}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subTitle}>{subTitle}</Text>
-      </View>
-    </View>
+    <Swipeable renderRightActions={renderRightActions}>
+      <TouchableHighlight underlayColor={colors.light} onPress={onPress}>
+        <View style={styles.container}>
+          <Image style={styles.image} source={image} />
+          <View style={styles.containerText}>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.subTitle}>{subTitle}</Text>
+          </View>
+        </View>
+      </TouchableHighlight>
+    </Swipeable>
   );
 };
 
@@ -28,7 +35,7 @@ const styles = StyleSheet.create({
   containerText: {
     marginLeft: 15,
     paddingVertical: 5,
-    gap: 5
+    gap: 5,
   },
   image: {
     width: 70,
@@ -37,10 +44,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   subTitle: {
     color: colors.medium,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
 });
