@@ -4,19 +4,21 @@ import colors from '../config/colors';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 interface Props {
-  image: ImageSourcePropType;
+  image?: ImageSourcePropType;
+  IconComponent?: React.JSX.Element;
   title: string;
-  subTitle: string;
-  onPress: () => void;
+  subTitle?: string;
+  onPress?: () => void;
   renderRightActions?: (progress: any, dragX: any) => React.ReactNode;
 }
 
-export const ListItem = ({ image, title, subTitle, onPress, renderRightActions }: Props) => {
+export const ListItem = ({ image, IconComponent: ImageComponent, title, subTitle, onPress, renderRightActions }: Props) => {
   return (
     <Swipeable renderRightActions={renderRightActions}>
       <TouchableHighlight underlayColor={colors.light} onPress={onPress}>
         <View style={styles.container}>
-          <Image style={styles.image} source={image} />
+          {ImageComponent && ImageComponent}
+          {image && <Image style={styles.image} source={image} />}
           <View style={styles.containerText}>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.subTitle}>{subTitle}</Text>
@@ -29,8 +31,9 @@ export const ListItem = ({ image, title, subTitle, onPress, renderRightActions }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 15,
     flexDirection: 'row',
+    backgroundColor: colors.white
   },
   containerText: {
     marginLeft: 15,

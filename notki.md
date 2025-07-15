@@ -220,3 +220,49 @@ export const MessagesScreen = () => {
       />
     </SafeAreaView>
 ```
+
+pull to refresh wymaga zaimplementowania 2 dodatkowcy propsow
+`refreshing` oraz `onRefresh` 
+
+własnością refresh powinno sie zarzadzac w ramach `onRefresh`. samo  refreshing oczekuje tylko boolean na podstawie ktorego wyswietla spinner albo nie. 
+
+```
+export const MessagesScreen = () => {
+  const [messages, setMessages] = useState<Message[]>(messagesMock);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleDelete = (msg: Message) => {
+    setMessages(state => state.filter(m => m.id !== msg.id));
+  };
+
+  return (
+    <SafeAreaView style={styles.screen}>
+      <FlatList
+        data={messages}
+        keyExtractor={msg => msg.id.toString()}
+        renderItem={({ item, index, separators }) => (
+          <ListItem
+            title={item.title}
+            subTitle={item.description}
+            image={item.image}
+            onPress={() => {}}
+            renderRightActions={() => <ListItemDeleteAction onPress={() => handleDelete(item)} />}
+          />
+        )}
+        ItemSeparatorComponent={ListItemSeparator}
+        refreshing={refreshing}
+        onRefresh={() => {
+          setMessages([
+            {
+              id: 2,
+              title: 'T2',
+              description: 'D2',
+              image: require('../assets/app-foto/mosh.jpg'),
+            },
+          ]);
+        }}
+      />
+    </SafeAreaView>
+  );
+};
+```

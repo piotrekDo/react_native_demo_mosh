@@ -22,8 +22,10 @@ const messagesMock: Message[] = [
 
 export const MessagesScreen = () => {
   const [messages, setMessages] = useState<Message[]>(messagesMock);
+  const [refreshing, setRefreshing] = useState(false);
+
   const handleDelete = (msg: Message) => {
-    setMessages(state => state.filter(m => m.id !== msg.id))
+    setMessages(state => state.filter(m => m.id !== msg.id));
   };
 
   return (
@@ -41,6 +43,17 @@ export const MessagesScreen = () => {
           />
         )}
         ItemSeparatorComponent={ListItemSeparator}
+        refreshing={refreshing}
+        onRefresh={() => {
+          setMessages([
+            {
+              id: 2,
+              title: 'T2',
+              description: 'D2',
+              image: require('../assets/app-foto/mosh.jpg'),
+            },
+          ]);
+        }}
       />
     </SafeAreaView>
   );
@@ -49,5 +62,6 @@ export const MessagesScreen = () => {
 const styles = StyleSheet.create({
   screen: {
     paddingTop: Constants.statusBarHeight,
+    flex: 1
   },
 });
