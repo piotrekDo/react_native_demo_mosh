@@ -1,4 +1,5 @@
 # https://docs.expo.dev/index.html
+# https://reactnative.dev/docs/components-and-apis
 
 ## nowy projekt
 
@@ -266,3 +267,9 @@ export const MessagesScreen = () => {
   );
 };
 ```
+
+### DROPDOWN PICKER
+
+`npx expo install react-native-dropdown-picker`
+
+pryklad uzycia w ramach AppDropdownPicker.tsx
