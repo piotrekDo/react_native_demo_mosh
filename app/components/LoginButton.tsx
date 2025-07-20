@@ -3,12 +3,14 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import colors from '../config/colors';
 
+type Props = {
+  onPress?: () => void;
+};
 
-type Props = {};
-
-export default function LoginButton({}: Props) {
+export default function LoginButton({ onPress }: Props) {
   const handleButtonPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    onPress && onPress();
   };
   return (
     <TouchableOpacity onPress={handleButtonPress}>

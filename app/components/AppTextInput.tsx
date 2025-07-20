@@ -11,7 +11,7 @@ interface Props {
 export const AppTextInput = ({ icon, placeholder }: Props) => {
   return (
     <View style={styles.constainer}>
-      {icon && <MaterialCommunityIcons style={styles.icon} name={icon} size={40}/>}
+      {icon && <MaterialCommunityIcons style={styles.icon} name={icon} size={40} />}
       <TextInput style={styles.textInput} placeholder={placeholder} />
     </View>
   );

@@ -273,3 +273,425 @@ export const MessagesScreen = () => {
 `npx expo install react-native-dropdown-picker`
 
 pryklad uzycia w ramach AppDropdownPicker.tsx
+
+## Formularze
+
+https://formik.org/docs/overview
+
+w aplikacji wykorzystywany w wersji 2.1.4
+`npm i formik@2.1.4`
+
+Tworzymy komponent Formik, w nim przekazujemy obiekt z initialValues, reprezentujacy nasz formularz, trzeba tez zdefiniowac onSubmit.
+
+Następnie definiujemy treść formularza **w formie zapisu funkcji** jak w przykladzie ponizej. Funkcja daje dostep do obiektu formik, w przykladzie destrukturyzowanym do postaci handleHange oraz handleSubmit. 
+- handleChange musi zostac przekazane w ramach handleChange samego inputu,
+- handle submit przekazujmy do przycisku submit. 
+
+Formik samodzielnie zarzadza stanem inputu.
+
+```
+import React from 'react';
+import { View, StyleSheet, Image, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import colors from '../config/colors';
+import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import LoginButton from '../components/LoginButton';
+import { Formik } from 'formik';
+
+export const LoginScreen = () => {
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Image style={styles.logo} source={require('../assets/app-foto/logo-red.png')} />
+
+        <Formik 
+          initialValues={{ email: '', password: '' }} 
+          onSubmit={values => alert(values.email + ' ' + values.password)}
+        >
+          {( {handleChange, handleSubmit} ) => (
+            <>
+              <View style={styles.inputsContainer}>
+                <View style={styles.inputContainer}>
+                  <MaterialIcons style={styles.closeIcon} name='mail' size={40} color={colors.medium} />
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder='login'
+                    autoCapitalize='none'
+                    textContentType='username'
+                    onChangeText={handleChange("email")}
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <FontAwesome5 style={styles.closeIcon} name='unlock-alt' size={40} color={colors.medium} />
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder='login'
+                    autoCapitalize='none'
+                    textContentType='password'
+                    secureTextEntry={true}
+                    onChangeText={handleChange("password")}
+                  />
+                </View>
+              </View>
+              <View style={styles.loginButtonContainer}>
+                <LoginButton onPress={handleSubmit}/>
+              </View>
+            </>
+          )}
+        </Formik>
+      </View>
+    </TouchableWithoutFeedback>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.white,
+    flex: 1,
+    padding: 20,
+  },
+  logo: {
+    width: 80,
+    height: 80,
+    alignSelf: 'center',
+    marginTop: 50,
+    marginBottom: 20,
+  },
+  inputsContainer: {
+    marginTop: 20,
+    gap: 20,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    borderRadius: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: colors.light,
+    width: '100%',
+    gap: 10,
+  },
+  textInput: {
+    fontSize: 25,
+    width: '100%',
+    fontWeight: 'bold',
+    flex: 1,
+  },
+  loginButtonContainer: {
+    marginTop: 50,
+  },
+});
+
+```
+
+### YUP walidacja formularzy
+Formik ma wbudowana funkcjonalnosc obslugi walidacji z yup
+`npm i yup`
+
+import:
+`import * as Yup from 'yup';`
+
+nastepnie trzeba zdefiniowac scheme
+```
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().required().email().label("Email"),
+    password: Yup.string().required().min(4).label("Password")
+  });
+```
+
+przekazac ja do Formik
+```
+  <Formik
+    initialValues={{ email: '', password: '' }}
+    onSubmit={values => alert(values.email + ' ' + values.password)}
+    validationSchema={validationSchema}
+  > 
+```
+
+do bledow mozna sie odnosic poprzez `errors.X`
+po wczesniejszym dopisaniu ich do funkcji renderujacej formularz
+`{({ handleChange, handleSubmit, errors }) => `
+`<Text style={styles.errorText}>{errors.email}</Text>`
+
+
+### FINALNIE CALY FORMULARZ MOZE WYGLADAC TAK
+
+```
+import React from 'react';
+import { View, StyleSheet, Image, TextInput, TouchableWithoutFeedback, Keyboard, Text } from 'react-native';
+import colors from '../config/colors';
+import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import LoginButton from '../components/LoginButton';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import { FormErrorMessage } from '../components/FormErrorMessage';
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().required().email().label('Email'),
+  password: Yup.string().required().min(4).label('Password'),
+});
+
+export const LoginScreen = () => {
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Image style={styles.logo} source={require('../assets/app-foto/logo-red.png')} />
+
+        <Formik
+          initialValues={{ email: '', password: '' }}
+          onSubmit={values => alert(values.email + ' ' + values.password)}
+          validationSchema={validationSchema}
+        >
+          {({ handleChange, handleSubmit, setFieldTouched, errors, touched }) => (
+            <>
+              <View style={styles.inputsContainer}>
+                <View style={styles.inputContainer}>
+                  <MaterialIcons style={styles.closeIcon} name='mail' size={40} color={colors.medium} />
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder='login'
+                    autoCapitalize='none'
+                    textContentType='username'
+                    onBlur={() => setFieldTouched('email')}
+                    onChangeText={handleChange('email')}
+                  />
+                </View>
+                {touched.email && <FormErrorMessage message={errors.email} />}
+
+                <View style={styles.inputContainer}>
+                  <FontAwesome5 style={styles.closeIcon} name='unlock-alt' size={40} color={colors.medium} />
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder='login'
+                    autoCapitalize='none'
+                    textContentType='password'
+                    secureTextEntry={true}
+                    onBlur={() => setFieldTouched('password')}
+                    onChangeText={handleChange('password')}
+                  />
+                </View>
+                {touched.password && <FormErrorMessage message={errors.password} />}
+              </View>
+              <View style={styles.loginButtonContainer}>
+                <LoginButton onPress={handleSubmit} />
+              </View>
+            </>
+          )}
+        </Formik>
+      </View>
+    </TouchableWithoutFeedback>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.white,
+    flex: 1,
+    padding: 20,
+  },
+  logo: {
+    width: 80,
+    height: 80,
+    alignSelf: 'center',
+    marginTop: 50,
+    marginBottom: 20,
+  },
+  inputsContainer: {
+    marginTop: 20,
+    gap: 20,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    borderRadius: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: colors.light,
+    width: '100%',
+    gap: 10,
+  },
+  textInput: {
+    fontSize: 25,
+    width: '100%',
+    fontWeight: 'bold',
+    flex: 1,
+  },
+  loginButtonContainer: {
+    marginTop: 50,
+  },
+});
+
+```
+
+
+### REUZYWALNY INPUT
+
+```
+import { useFormikContext } from 'formik';
+import React from 'react';
+import { StyleSheet, TextInput, TextInputProps } from 'react-native';
+import colors from '../config/colors';
+import { FormErrorMessage } from './FormErrorMessage';
+
+interface Props<T> extends TextInputProps {
+  name: keyof T;
+}
+
+export const AppTextFormInput = <T extends object>({ name, ...otherProps }: Props<T>) => {
+  const { setFieldTouched, handleChange, errors, touched } = useFormikContext<T>();
+
+  return (
+    <>
+      <TextInput
+        style={styles.textInput}
+        {...otherProps}
+        onBlur={() => setFieldTouched(name as string)}
+        onChangeText={handleChange(name as string)}
+      />
+      {touched[name] && errors[name] && <FormErrorMessage message={errors[name] as string} />}
+    </>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.white,
+    flex: 1,
+    padding: 20,
+  },
+  logo: {
+    width: 80,
+    height: 80,
+    alignSelf: 'center',
+    marginTop: 50,
+    marginBottom: 20,
+  },
+  inputsContainer: {
+    marginTop: 20,
+    gap: 20,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    borderRadius: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: colors.light,
+    width: '100%',
+    gap: 10,
+  },
+  textInput: {
+    fontSize: 25,
+    width: '100%',
+    fontWeight: 'bold',
+    flex: 1,
+  },
+  loginButtonContainer: {
+    marginTop: 50,
+  },
+});
+```
+
+#### Z WYKORZYSTANIEM
+
+```
+import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { Formik } from 'formik';
+import React from 'react';
+import { Image, Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import * as Yup from 'yup';
+import { AppTextFormInput } from '../components/AppTextFormInput';
+import LoginButton from '../components/LoginButton';
+import colors from '../config/colors';
+
+interface FormValues {
+  email: string;
+  password: string;
+}
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().required().email().label('Email'),
+  password: Yup.string().required().min(4).label('Password'),
+});
+
+export const LoginScreen = () => {
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Image style={styles.logo} source={require('../assets/app-foto/logo-red.png')} />
+
+        <Formik<FormValues>
+          initialValues={{ email: '', password: '' }}
+          onSubmit={values => alert(values.email + ' ' + values.password)}
+          validationSchema={validationSchema}
+        >
+          {({ handleSubmit }) => (
+            <>
+              <View style={styles.inputsContainer}>
+                <View style={styles.inputContainer}>
+                  <MaterialIcons name='mail' size={40} color={colors.medium} />
+                  <AppTextFormInput<FormValues>
+                    name='email'
+                    placeholder='login'
+                    autoCapitalize='none'
+                    textContentType='username'
+                    keyboardType='email-address'
+                  />
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <FontAwesome5 name='unlock-alt' size={40} color={colors.medium} />
+                  <AppTextFormInput<FormValues>
+                    name='password'
+                    placeholder='password'
+                    autoCapitalize='none'
+                    textContentType='password'
+                    secureTextEntry
+                  />
+                </View>
+              </View>
+
+              <View style={styles.loginButtonContainer}>
+                <LoginButton onPress={handleSubmit} />
+              </View>
+            </>
+          )}
+        </Formik>
+      </View>
+    </TouchableWithoutFeedback>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.white,
+    flex: 1,
+    padding: 20,
+  },
+  logo: {
+    width: 80,
+    height: 80,
+    alignSelf: 'center',
+    marginTop: 50,
+    marginBottom: 20,
+  },
+  inputsContainer: {
+    marginTop: 20,
+    gap: 20,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    borderRadius: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: colors.light,
+    width: '100%',
+    gap: 10,
+  },
+  textInput: {
+    fontSize: 25,
+    width: '100%',
+    fontWeight: 'bold',
+    flex: 1,
+  },
+  loginButtonContainer: {
+    marginTop: 50,
+  },
+});
+```
