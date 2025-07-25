@@ -1,8 +1,8 @@
 import { Formik, FormikHelpers, FormikValues } from 'formik';
 import React, { ReactNode } from 'react';
-import { Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import * as Yup from 'yup';
-import colors from '../config/colors';
+import colors from '../../config/colors';
 
 interface Props<T extends FormikValues> {
   initialValues: T;

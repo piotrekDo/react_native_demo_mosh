@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { View, StyleSheet } from 'react-native';
-import colors from '../config/colors';
+import colors from '../../config/colors';
 
 //
 //
@@ -10,7 +10,7 @@ import colors from '../config/colors';
 //
 
 interface Props {
-  items: { label: string; value: string }[];
+  items: { label: string; value: string | number}[];
   placeholder?: string;
   onSelect: (value: string | null) => void;
 }
