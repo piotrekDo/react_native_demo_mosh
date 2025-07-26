@@ -1,9 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { LoginScreen } from './app/screens/LoginScreen';
-import { RegisterScreen } from './app/screens/RegisterScreen';
 import { ListingEditScreen } from './app/screens/ListingEditScreen';
-import { MessagesScreen } from './app/screens/MessagesScreen';
 
 export default function App() {
   return (
@@ -15,12 +12,8 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 50,
     flex: 1,
     backgroundColor: 'white',
-  },
-  input: {
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 1,
   },
 });
