@@ -1,16 +1,12 @@
-import React from "react";
-import { View, TextInput, TextInputProps, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React from "react";
+import { StyleSheet, TextInput, View } from "react-native";
 import colors from "../config/colors";
 import { AppTextInputProps } from "./form/AppFormField";
 
-interface Props extends TextInputProps {
-  icon?: keyof typeof MaterialCommunityIcons.glyphMap;
-}
-
-export const AppTextInput = ({ icon, ...otherProps }: AppTextInputProps) => {
+export const AppTextInput = ({ icon, width = '100%', ...otherProps }: AppTextInputProps) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { width }]}>
       {icon && (
         <MaterialCommunityIcons
           name={icon}

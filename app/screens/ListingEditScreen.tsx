@@ -5,6 +5,7 @@ import { SubmitButton } from "../components/form/SubmitButton";
 import { AppFormField } from "../components/form/AppFormField";
 import { AppDropdownPicker } from "../components/form/AppDropdownPicker";
 import colors from "../config/colors";
+import { IconPicker, IconPickerItemModel } from "../components/icon_picker/IconPicker";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label("Title"),
@@ -13,10 +14,16 @@ const validationSchema = Yup.object().shape({
   category: Yup.object().required().nullable().label("Category"),
 });
 
-const categories = [
-  { label: "Furniture", value: 1 },
-  { label: "Clothing", value: 2 },
-  { label: "Camera", value: 3 },
+const categories: IconPickerItemModel[] = [
+  {id: 'Furniture', icon: 'floor-lamp', color: '#fc5c65', text: 'Furniture'},
+  {id: 'Cars', icon: 'car', color: '#fd9644', text: 'Cars'},
+  {id: 'Cameras', icon: 'camera', color: '#fed330', text: 'Cameras'},
+  {id: 'Games', icon: 'cards', color: '#26de81', text: 'Games'},
+  {id: 'Clothing', icon: 'shoe-heel', color: '#2bcbba', text: 'Clothing'},
+  {id: 'Sports', icon: 'basketball', color: '#45aaf2', text: 'Sports'},
+  {id: 'Movies & Music', icon: 'headphones', color: '#4b7bec', text: 'Movies & Music'},
+  {id: 'Books', icon: 'book-open-blank-variant', color: '#A55EEA', text: 'Books'},
+  {id: 'Other', icon: 'window-maximize', color: '#65778A', text: 'Other'},
 ];
 
 export const ListingEditScreen = () => {
@@ -38,8 +45,9 @@ export const ListingEditScreen = () => {
           maxLength={8}
           name="price"
           placeholder="Price"
+          width={120}
         />
-        <AppDropdownPicker items={categories} placeholder="Category" onSelect={() => {}}/>
+        <IconPicker pickerItems={categories}/>
         <AppFormField
           maxLength={255}
           multiline
