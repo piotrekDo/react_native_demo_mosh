@@ -1,19 +1,28 @@
 import { StyleSheet, View } from 'react-native';
 import * as Yup from 'yup';
 import { AppForm } from '../components/form/AppForm';
-import { SubmitButton } from '../components/form/SubmitButton';
 import { AppFormField } from '../components/form/AppFormField';
-import { AppDropdownPicker } from '../components/form/AppDropdownPicker';
-import colors from '../config/colors';
-import { IconPicker, IconPickerItemModel } from '../components/icon_picker/IconPicker';
 import { FormImagePicker } from '../components/form/FormImagePicker';
+import { SubmitButton } from '../components/form/SubmitButton';
+import { IconPicker, IconPickerItemModel } from '../components/icon_picker/IconPicker';
+import colors from '../config/colors';
+import useUserLocation, { LocationCoords } from '../hooks/useUserLocation';
+
+interface FormValues {
+  title: string;
+  price: number;
+  description: string | undefined;
+  category: IconPickerItemModel;
+  images: string[];
+  location: LocationCoords | undefined;
+}
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label('Title'),
   price: Yup.number().required().min(1).max(10000).label('Price'),
   description: Yup.string().label('Description'),
   category: Yup.object().required().nullable().label('Category'),
-  images: Yup.array().min(1, "Please select at least one image.").label('Images'),
+  images: Yup.array().min(1, 'Please select at least one image.').label('Images'),
 });
 
 const categories: IconPickerItemModel[] = [
@@ -29,6 +38,8 @@ const categories: IconPickerItemModel[] = [
 ];
 
 export const ListingEditScreen = () => {
+  const { userLocation } = useUserLocation();
+
   return (
     <View style={styles.container}>
       <AppForm
@@ -39,14 +50,24 @@ export const ListingEditScreen = () => {
           category: null,
           images: [],
         }}
-        onSubmit={values => console.log(values)}
+        onSubmit={values => {
+          console.log('SUBMIT');
+          console.log('Form: ', values);
+          console.log('Location: ', userLocation);
+        }}
         validationSchema={validationSchema}
       >
-        <FormImagePicker name='images'/>
-        <AppFormField maxLength={255} name='title' placeholder='Title' />
-        <AppFormField keyboardType='numeric' maxLength={8} name='price' placeholder='Price' width={120} />
-        <IconPicker pickerItems={categories} />
-        <AppFormField maxLength={255} multiline name='description' numberOfLines={3} placeholder='Description' />
+        <FormImagePicker name='images' />
+        <AppFormField<FormValues> maxLength={255} name='title' placeholder='Title' />
+        <AppFormField<FormValues> keyboardType='numeric' maxLength={8} name='price' placeholder='Price' width={120} />
+        <IconPicker<FormValues> name='category' pickerItems={categories} />
+        <AppFormField<FormValues>
+          maxLength={255}
+          multiline
+          name='description'
+          numberOfLines={3}
+          placeholder='Description'
+        />
         <SubmitButton title='Post' />
       </AppForm>
     </View>

@@ -6,6 +6,8 @@ import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFe
 import colors from '../../config/colors';
 import { IconPickerItem } from './IconPickerItem';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FieldInputProps, useFormikContext } from 'formik';
+import { ErrorMessage } from '../form/ErrorMessage';
 
 export interface IconPickerItemModel {
   id: string;
@@ -14,11 +16,14 @@ export interface IconPickerItemModel {
   text: string;
 }
 
-interface Props {
+interface Props<T> {
+  name: string;
   pickerItems: IconPickerItemModel[];
 }
 
-export const IconPicker = ({ pickerItems }: Props) => {
+export function IconPicker<T>({ name, pickerItems }: Props<T>) {
+  const { errors, setFieldValue, touched, values } = useFormikContext<T>();
+
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState<IconPickerItemModel | undefined>(undefined);
 
@@ -32,6 +37,8 @@ export const IconPicker = ({ pickerItems }: Props) => {
           </View>
         </View>
       </TouchableOpacity>
+      <ErrorMessage message={(errors as any)[name] as string} />
+    
 
       <Modal visible={modalVisible} animationType='slide'>
         <View style={styles.modalCloseButton}>
@@ -53,6 +60,7 @@ export const IconPicker = ({ pickerItems }: Props) => {
               <TouchableOpacity
                 key={item.id}
                 onPress={() => {
+                  setFieldValue(name, item);
                   setSelectedItem(item);
                   setModalVisible(false);
                 }}
