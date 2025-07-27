@@ -1,11 +1,19 @@
+import { useNavigation } from '@react-navigation/native';
+import Constants from 'expo-constants';
 import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, ImageSourcePropType, StyleSheet, View } from 'react-native';
 import { ItemCard } from '../components/ItemCard';
 import colors from '../config/colors';
-import Constants from 'expo-constants';
-import { ListItemSeparator } from '../components/ListItemSeparator';
+import routes from '../navigation/routes';
 
-const listings = [
+export interface ListingItem {
+  id: number;
+  title: string;
+  price: number;
+  image: ImageSourcePropType;
+}
+
+const listings: ListingItem[] = [
   {
     id: 1,
     title: 'Red jacket for sale',
@@ -21,12 +29,20 @@ const listings = [
 ];
 
 export const ListingsScreen = () => {
+  const navigator = useNavigation<any>();
   return (
     <View style={styles.container}>
       <FlatList
         data={listings}
         keyExtractor={item => item.id.toString()}
-        renderItem={({ item }) => <ItemCard title={item.title} subTitle={'$' + item.price} image={item.image} />}
+        renderItem={({ item }) => (
+          <ItemCard
+            title={item.title}
+            subTitle={'$' + item.price}
+            image={item.image}
+            onPress={() => navigator.navigate(routes.LISTINGS_DETAILS, item)}
+          />
+        )}
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
       />
     </View>

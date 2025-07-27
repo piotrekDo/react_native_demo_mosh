@@ -2,10 +2,15 @@ import * as Haptics from 'expo-haptics';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import colors from '../config/colors';
+import { useNavigation } from '@react-navigation/native';
+import routes from '../navigation/routes';
 
 export const RegisterButton = () => {
+  const navigation = useNavigation<any>();
+
   const handleButtonPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    navigation.navigate(routes.REGISTER);
   };
 
   return (

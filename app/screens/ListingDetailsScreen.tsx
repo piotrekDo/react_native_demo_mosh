@@ -1,17 +1,26 @@
+import { useRoute } from '@react-navigation/native';
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import colors from '../config/colors';
 import { ListItem } from '../components/ListItem';
+import colors from '../config/colors';
+import { ListingItem } from './ListingsScreen';
 
 export const ListingDetailsScreen = () => {
+  const route = useRoute<any>();
+  const listing: ListingItem = route.params;
   return (
     <View style={styles.container}>
-      <Image resizeMode='cover' style={styles.image} source={require('../assets/app-foto/jacket.jpg')} />
+      <Image resizeMode='cover' style={styles.image} source={listing.image} />
       <View style={styles.containerText}>
-        <Text style={styles.title}>Red jacket for sale!</Text>
-        <Text style={styles.subTitle}>$100</Text>
+        <Text style={styles.title}>{listing.title}</Text>
+        <Text style={styles.subTitle}>{listing.price}</Text>
       </View>
-      <ListItem image={require('../assets/app-foto/mosh.jpg')} title='Mosh Hamedani' subTitle='5 Listings' onPress={() => {}}/>
+      <ListItem
+        image={require('../assets/app-foto/mosh.jpg')}
+        title='Mosh Hamedani'
+        subTitle='5 Listings'
+        onPress={() => {}}
+      />
     </View>
   );
 };

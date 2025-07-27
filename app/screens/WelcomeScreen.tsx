@@ -3,7 +3,7 @@ import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import LoginButton from '../components/LoginButton';
 import { RegisterButton } from '../components/RegisterButton';
 
-function WelcomeScreen(props) {
+function WelcomeScreen() {
   return (
     <View style={styles.containerMain}>
       <Image

@@ -1,12 +1,15 @@
 import { StyleSheet } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { ListingEditScreen } from './app/screens/ListingEditScreen';
+import AuthNavigator from './app/navigation/AuthNavigator';
+import { NavigationContainer } from '@react-navigation/native';
+import navigationTheme from './app/navigation/navigationTheme';
+import AppNavigator from './app/navigation/AppNavigator';
+
 
 export default function App() {
   return (
-    <GestureHandlerRootView>
-      <ListingEditScreen />
-    </GestureHandlerRootView>
+    <NavigationContainer theme={navigationTheme}>
+      <AppNavigator />
+    </NavigationContainer>
   );
 }
 
