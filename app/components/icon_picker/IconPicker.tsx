@@ -10,7 +10,7 @@ import { FieldInputProps, useFormikContext } from 'formik';
 import { ErrorMessage } from '../form/ErrorMessage';
 
 export interface IconPickerItemModel {
-  id: string;
+  id: number;
   icon: keyof typeof MaterialCommunityIcons.glyphMap;
   color: string;
   text: string;
@@ -55,7 +55,7 @@ export function IconPicker<T>({ name, pickerItems }: Props<T>) {
           <FlatList
             numColumns={3}
             data={pickerItems}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.id.toString()}
             renderItem={({ item, index }) => (
               <TouchableOpacity
                 key={item.id}

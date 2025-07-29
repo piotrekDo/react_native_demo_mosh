@@ -5,15 +5,15 @@ import colors from '../config/colors';
 interface Props {
   title: string;
   subTitle: string;
-  image: ImageSourcePropType;
+  imageUrl: string;
   onPress: () => void;
 }
 
-export const ItemCard = ({ title, subTitle, image, onPress }: Props) => {
+export const ItemCard = ({ title, subTitle, imageUrl, onPress }: Props) => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.container}>
-        <Image source={image} style={styles.image} resizeMode='cover' />
+        <Image source={{uri: imageUrl}} style={styles.image} resizeMode='cover' />
         <View style={styles.containerText}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subTitle}>{subTitle}</Text>

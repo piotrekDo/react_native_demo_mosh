@@ -92,53 +92,10 @@ const styles = StyleSheet.create({
 ```
 
 
+### activity indicator / loader
+do przedstawiania prostego spinnera mozna wykorzystac wbudowany w react native komponent- nalezy do niego przekazac boolean odpowiedzilny ze jego wyswietlanie, opcjonalnie
+props size
 
-
-
-
-#### StackNavigator
-npm install @react-navigation/native-stack
-
-Przykladowa konfiguracja demo- w `App` umiescic `NavigationContainer` a w nim `StackNavigator`
 ```
-import { StyleSheet, View, Text } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { ListingEditScreen } from './app/screens/ListingEditScreen';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {NavigationContainer} from '@react-navigation/native'
-
-const Tweets = () => (
-  <View style={{marginTop: 60}}>
-    <Text>Tweets</Text>
-  </View>
-);
-
-const TweetDetails = () => (
-  <View style={{marginTop: 60}}>
-    <Text>TweetDetails</Text>
-  </View>
-);
-
-
-const Stack = createNativeStackNavigator();
-const StackNavigator =() => (
-  <Stack.Navigator initialRouteName='Tweets'>
-    <Stack.Screen name='Tweets' component={Tweets}/>
-    <Stack.Screen name='TweetDetails' component={TweetDetails}/>
-  </Stack.Navigator>
-)
-
-export default function App() {
-  return (
-    <NavigationContainer>
-      <StackNavigator />
-    </NavigationContainer>
-  );
-}
-};
+<ActivityIndicator size={'large'} animating={true}/>
 ```
-
-#### Tab Navigator
-dzieli sie na 2 rodzaje- `bottom` i `top`
-BOTTOM
-`npm install @react-navigation/bottom-tabs`

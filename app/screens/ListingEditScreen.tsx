@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import * as Yup from 'yup';
+import { addListing } from '../api/listings';
 import { AppForm } from '../components/form/AppForm';
 import { AppFormField } from '../components/form/AppFormField';
 import { FormImagePicker } from '../components/form/FormImagePicker';
@@ -26,19 +27,34 @@ const validationSchema = Yup.object().shape({
 });
 
 const categories: IconPickerItemModel[] = [
-  { id: 'Furniture', icon: 'floor-lamp', color: '#fc5c65', text: 'Furniture' },
-  { id: 'Cars', icon: 'car', color: '#fd9644', text: 'Cars' },
-  { id: 'Cameras', icon: 'camera', color: '#fed330', text: 'Cameras' },
-  { id: 'Games', icon: 'cards', color: '#26de81', text: 'Games' },
-  { id: 'Clothing', icon: 'shoe-heel', color: '#2bcbba', text: 'Clothing' },
-  { id: 'Sports', icon: 'basketball', color: '#45aaf2', text: 'Sports' },
-  { id: 'Movies & Music', icon: 'headphones', color: '#4b7bec', text: 'Movies & Music' },
-  { id: 'Books', icon: 'book-open-blank-variant', color: '#A55EEA', text: 'Books' },
-  { id: 'Other', icon: 'window-maximize', color: '#65778A', text: 'Other' },
+  { id: 1, icon: 'floor-lamp', color: '#fc5c65', text: 'Furniture' },
+  { id: 2, icon: 'car', color: '#fd9644', text: 'Cars' },
+  { id: 3, icon: 'camera', color: '#fed330', text: 'Cameras' },
+  { id: 4, icon: 'cards', color: '#26de81', text: 'Games' },
+  { id: 5, icon: 'shoe-heel', color: '#2bcbba', text: 'Clothing' },
+  { id: 5, icon: 'basketball', color: '#45aaf2', text: 'Sports' },
+  { id: 6, icon: 'headphones', color: '#4b7bec', text: 'Movies & Music' },
+  { id: 7, icon: 'book-open-blank-variant', color: '#A55EEA', text: 'Books' },
+  { id: 8, icon: 'window-maximize', color: '#65778A', text: 'Other' },
 ];
 
 export const ListingEditScreen = () => {
   const { userLocation } = useUserLocation();
+
+const handleSubmit = async (listing: any) => {
+  try {
+    const result = await addListing({ ...listing, userLocation });
+    console.log('result:', result);
+    if (!result) {
+      console.log('Response not OK', result.problem, result.data);
+      return alert('Could not save the listing.');
+    }
+    alert('Success');
+  } catch (error) {
+    console.log('Error:', error);
+    alert('Could not save the listing.');
+  }
+};
 
   return (
     <View style={styles.container}>
@@ -50,11 +66,7 @@ export const ListingEditScreen = () => {
           category: null,
           images: [],
         }}
-        onSubmit={values => {
-          console.log('SUBMIT');
-          console.log('Form: ', values);
-          console.log('Location: ', userLocation);
-        }}
+        onSubmit={handleSubmit}
         validationSchema={validationSchema}
       >
         <FormImagePicker name='images' />

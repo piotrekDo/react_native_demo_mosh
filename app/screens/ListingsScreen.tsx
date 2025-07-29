@@ -1,37 +1,26 @@
 import { useNavigation } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import React from 'react';
-import { FlatList, ImageSourcePropType, StyleSheet, View } from 'react-native';
+import { Button, FlatList, StyleSheet, Text, View } from 'react-native';
 import { ItemCard } from '../components/ItemCard';
+import { SandyLoadingActivityIndicator } from '../components/SandyLoadingActivityIndicator';
 import colors from '../config/colors';
+import useListings from '../hooks/useListings';
 import routes from '../navigation/routes';
 
-export interface ListingItem {
-  id: number;
-  title: string;
-  price: number;
-  image: ImageSourcePropType;
-}
-
-const listings: ListingItem[] = [
-  {
-    id: 1,
-    title: 'Red jacket for sale',
-    price: 100,
-    image: require('../assets/app-foto/jacket.jpg'),
-  },
-  {
-    id: 2,
-    title: 'Couch in grat condition',
-    price: 1000,
-    image: require('../assets/app-foto/couch.jpg'),
-  },
-];
-
 export const ListingsScreen = () => {
+  const { listings, error, isLoading, loadListings } = useListings();
+
   const navigator = useNavigation<any>();
   return (
     <View style={styles.container}>
+      {error && (
+        <>
+          <Text>Couldn't retrieve the listings.</Text>
+          <Button title='Try again' onPress={loadListings} />
+        </>
+      )}
+      <SandyLoadingActivityIndicator visible={isLoading} />
       <FlatList
         data={listings}
         keyExtractor={item => item.id.toString()}
@@ -39,7 +28,7 @@ export const ListingsScreen = () => {
           <ItemCard
             title={item.title}
             subTitle={'$' + item.price}
-            image={item.image}
+            imageUrl={item.images[0].url}
             onPress={() => navigator.navigate(routes.LISTINGS_DETAILS, item)}
           />
         )}
