@@ -1,5 +1,6 @@
 {
   "expo": {
+    "jsEngine": "hermes",
     "name": "DoneWithItMosh",
     "slug": "DoneWithItMosh",
     "version": "1.0.0",
