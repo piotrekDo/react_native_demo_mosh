@@ -6,40 +6,16 @@ import AppNavigator from './app/navigation/AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import NetInfo, { useNetInfo } from '@react-native-community/netinfo';
-
-declare global {
-  // Dodajemy deklarację nowej metody na globalu
-  var showAsyncStorageContent: (() => Promise<void>) | undefined;
-}
+import useAuthStore from './app/auth/useAuthState';
+import useAuth from './app/auth/useAuth';
 
 export default function App() {
-  const netinfo = useNetInfo();
-
-  const demo = async () => {
-    try {
-      await AsyncStorage.setItem('person', JSON.stringify({ id: 1, name: 'Random' }));
-      const value = await AsyncStorage.getItem('person');
-      const person = JSON.parse(value!)
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-global.showAsyncStorageContent = async () => {
-  const keys = await AsyncStorage.getAllKeys();
-  const stores = await AsyncStorage.multiGet(keys);
-  console.log(stores);
-};
-
+  const { user } = useAuth();
   return (
-    <View style={styles.container}>
-      <Text>{netinfo.details?.isConnectionExpensive}</Text>
-      <Text>{netinfo.type}</Text>
-      <Text>{netinfo.isConnected}</Text>
-    </View>
-    // <NavigationContainer theme={navigationTheme}>
-    //   <AppNavigator />
-    // </NavigationContainer>
+    <NavigationContainer theme={navigationTheme}>
+      {!user && <AuthNavigator />}
+      {user && <AppNavigator />}
+    </NavigationContainer>
   );
 }
 

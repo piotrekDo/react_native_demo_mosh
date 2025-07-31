@@ -6,6 +6,10 @@ import * as Yup from 'yup';
 import { AppTextFormInput } from '../components/AppTextFormInput';
 import LoginButton from '../components/LoginButton';
 import colors from '../config/colors';
+import login from '../api/auth';
+import { jwtDecode } from 'jwt-decode';
+import useAuthStore from '../auth/useAuthState';
+import useAuth from '../auth/useAuth';
 
 interface FormValues {
   email: string;
@@ -18,6 +22,14 @@ const validationSchema = Yup.object().shape({
 });
 
 export const LoginScreen = () => {
+  const {logIn} = useAuth();
+  
+  const sendRequest = async (email: string, password: string) => {
+    const result = await login(email, password);
+    if (result.data) {
+      logIn(result.data)
+    }
+  };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
@@ -25,7 +37,7 @@ export const LoginScreen = () => {
 
         <Formik<FormValues>
           initialValues={{ email: '', password: '' }}
-          onSubmit={values => alert(values.email + ' ' + values.password)}
+          onSubmit={values => sendRequest(values.email, values.password)}
           validationSchema={validationSchema}
         >
           {({ handleSubmit }) => (
